@@ -15,6 +15,7 @@ from urllib.parse import urlparse
 
 class CodeArtifactBackend(backend.KeyringBackend):
     REGEX = r'^(.+)-(\d{12})\.d\.codeartifact\.([^\.]+)\.amazonaws\.com$'
+    TOKEN_DURATION = 900
 
     priority = 9.9
 
@@ -58,7 +59,7 @@ class CodeArtifactBackend(backend.KeyringBackend):
 
         # Ask for an authorization token using the current AWS credentials.
         response = client.get_authorization_token(
-            domain=domain, domainOwner=account, durationSeconds=3600
+            domain=domain, domainOwner=account, durationSeconds=self.TOKEN_DURATION
         )
 
         # Give up if the token has already expired.
